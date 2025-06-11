@@ -3,13 +3,15 @@ namespace SpriteKind {
     export const wall = SpriteKind.create()
     export const diamond = SpriteKind.create()
     export const water = SpriteKind.create()
+    export const rising_platform = SpriteKind.create()
 }
 function switchLevel () {
     if (current_level == 1) {
         tiles.setCurrentTilemap(tilemap`level1`)
+        createElevator()
+        createLever()
     }
     createPlayer()
-    createLever()
     createDiamonds()
     createWater()
 }
@@ -78,6 +80,97 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.lever, function (sprite, otherSp
 function createDiamonds () {
     for (let value of tiles.getTilesByType(assets.tile`myTile7`)) {
         diamonds = sprites.create(assets.image`diamond`, SpriteKind.diamond)
+        animation.runImageAnimation(
+        diamonds,
+        [img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . f f f f f f f . . . . 
+            . . . . f 2 f 2 2 2 f 4 f . . . 
+            . . . f 2 f 2 2 2 2 2 f 4 f . . 
+            . . f f f f f f f f f f f f f . 
+            . . f 2 2 f 2 2 2 2 2 f 4 4 f . 
+            . . . f 2 2 f 2 2 2 f 4 4 f . . 
+            . . . . f 2 f 2 2 2 f 4 f . . . 
+            . . . . . f 2 f 2 f 4 f . . . . 
+            . . . . . . f 2 f 4 f . . . . . 
+            . . . . . . . f f f . . . . . . 
+            . . . . . . . . f . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . f f f f f f f . . . . 
+            . . . . f 2 f 2 2 4 f 2 f . . . 
+            . . . f 2 f 2 2 2 2 4 f 2 f . . 
+            . . f f f f f f f f f f f f f . 
+            . . f 2 2 f 2 2 2 4 4 f 2 2 f . 
+            . . . f 2 2 f 2 2 4 f 2 2 f . . 
+            . . . . f 2 f 2 2 4 f 2 f . . . 
+            . . . . . f 2 f 4 f 2 f . . . . 
+            . . . . . . f 2 f 2 f . . . . . 
+            . . . . . . . f f f . . . . . . 
+            . . . . . . . . f . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . f f f f f f f . . . . 
+            . . . . f 2 f 2 4 2 f 2 f . . . 
+            . . . f 2 f 2 2 4 2 2 f 2 f . . 
+            . . f f f f f f f f f f f f f . 
+            . . f 2 2 f 2 2 4 2 2 f 2 2 f . 
+            . . . f 2 2 f 4 4 4 f 2 2 f . . 
+            . . . . f 2 f 4 4 4 f 2 f . . . 
+            . . . . . f 2 f 4 f 2 f . . . . 
+            . . . . . . f 2 f 2 f . . . . . 
+            . . . . . . . f f f . . . . . . 
+            . . . . . . . . f . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . f f f f f f f . . . . 
+            . . . . f 2 f 4 2 2 f 2 f . . . 
+            . . . f 2 f 4 2 2 2 2 f 2 f . . 
+            . . f f f f f f f f f f f f f . 
+            . . f 2 2 f 4 4 2 2 2 f 2 2 f . 
+            . . . f 2 2 f 4 2 2 f 2 2 f . . 
+            . . . . f 2 f 4 4 2 f 2 f . . . 
+            . . . . . f 2 f 4 f 2 f . . . . 
+            . . . . . . f 2 f 2 f . . . . . 
+            . . . . . . . f f f . . . . . . 
+            . . . . . . . . f . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . f f f f f f f . . . . 
+            . . . . f 4 f 2 2 2 f 2 f . . . 
+            . . . f 4 f 2 2 2 2 2 f 2 f . . 
+            . . f f f f f f f f f f f f f . 
+            . . f 4 4 f 2 2 2 2 2 f 2 2 f . 
+            . . . f 4 4 f 2 2 2 f 2 2 f . . 
+            . . . . f 4 f 2 2 2 f 2 f . . . 
+            . . . . . f 4 f 2 f 2 f . . . . 
+            . . . . . . f 4 f 2 f . . . . . 
+            . . . . . . . f f f . . . . . . 
+            . . . . . . . . f . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `],
+        150,
+        true
+        )
         tiles.placeOnTile(diamonds, value)
         tiles.setTileAt(value, assets.tile`transparency16`)
     }
@@ -108,14 +201,40 @@ function createWater () {
     }
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.water, function (sprite, otherSprite) {
-    sprites.destroy(otherSprite, effects.ashes, 2000)
-    pause(5000)
+    sprites.destroy(sprite, effects.ashes, 2000)
+    pause(2000)
     game.gameOver(false)
 })
 function setVariable () {
     player_speed = 100
     jump_speed = -150
     gravity = 500
+}
+function createElevator () {
+    for (let value of tiles.getTilesByType(assets.tile`myTile11`)) {
+        elevator = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            d d d d d d d d d d d d d d d d 
+            d d d d d d d d d d d d d d d d 
+            b b b b b b b b b b b b b b b b 
+            b b b b b b b b b b b b b b b b 
+            b b b b b b b b b b b b b b b b 
+            b b b b b b b b b b b b b b b b 
+            . . . . . . . . . . . . . . . . 
+            `, SpriteKind.rising_platform)
+        tiles.placeOnTile(elevator, value)
+        tiles.setTileAt(value, assets.tile`transparency16`)
+        elevator.setVelocity(0, 50)
+        elevator.setBounceOnWall(true)
+    }
 }
 function createPlayer () {
     if (current_level == 1) {
@@ -126,6 +245,7 @@ function createPlayer () {
         mySprite.ay = gravity
     }
 }
+let elevator: Sprite = null
 let lake: Sprite = null
 let gravity = 0
 let diamonds: Sprite = null
