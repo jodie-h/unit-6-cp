@@ -42,7 +42,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.switchLevel, function (sprite, o
     loadLevel()
 })
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (current_level == 2 && ofshots >= 0) {
+    if (current_level == 2 && ofshots >= 1) {
         ofshots += -1
         projectile = sprites.createProjectileFromSprite(img`
             . . . . . . . . . . . . . . . . 
@@ -328,7 +328,11 @@ function createDiamonds () {
         true
         )
         tiles.placeOnTile(diamonds, value)
-        tiles.setTileAt(value, assets.tile`transparency16`)
+        if (current_level == 1) {
+            tiles.setTileAt(value, assets.tile`transparency16`)
+        } else if (current_level == 2) {
+            tiles.setTileAt(value, sprites.dungeon.darkGroundCenter)
+        }
     }
 }
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -370,6 +374,8 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.chest, function (sprite, otherSp
     if (_of_keys == 0) {
         game.setGameOverEffect(true, effects.confetti)
         game.gameOver(true)
+    } else if (false) {
+        otherSprite.sayText("find " + "all " + "keys! " + _of_keys + " remaining!")
     }
 })
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -416,7 +422,7 @@ function createPlayer () {
             tiles.setTileAt(value, sprites.dungeon.darkGroundCenter)
         }
         mySprite.ay = 0
-        controller.moveSprite(mySprite, 100, 100)
+        controller.moveSprite(mySprite, 150, 150)
     }
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.keyS, function (sprite, otherSprite) {
