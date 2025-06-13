@@ -4,13 +4,14 @@ namespace SpriteKind {
     export const rising_platform = SpriteKind.create()
     export const switchLevel = SpriteKind.create()
     export const keyS = SpriteKind.create()
+    export const chest = SpriteKind.create()
 }
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     lastVX = 0
     lastVY = -1
 })
 function createEnemies_UpDown () {
-    for (let value of tiles.getTilesByType(assets.tile`transparency16`)) {
+    for (let value of tiles.getTilesByType(sprites.dungeon.collectibleRedCrystal)) {
         mySprite2 = sprites.create(img`
             . . f f f . . . . . . . . f f f 
             . f f 8 8 . . . . . . f 8 9 9 8 
@@ -31,7 +32,7 @@ function createEnemies_UpDown () {
             `, SpriteKind.Enemy)
         tiles.placeOnTile(mySprite2, value)
         tiles.setTileAt(value, assets.tile`transparency16`)
-        mySprite2.vx = 75
+        mySprite2.vx = 100
         mySprite2.setBounceOnWall(true)
     }
 }
@@ -94,8 +95,33 @@ function createLever () {
         holelocationlist.unshift(location)
     }
 }
+function createChest () {
+    for (let value of tiles.getTilesByType(sprites.dungeon.chestClosed)) {
+        mySprite3 = sprites.create(img`
+            . . b b b b b b b b b b b b . . 
+            . b e 4 4 4 4 4 4 4 4 4 4 e b . 
+            b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+            b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+            b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+            b e e 4 4 4 4 4 4 4 4 4 4 e e b 
+            b e e e e e e e e e e e e e e b 
+            b e e e e e e e e e e e e e e b 
+            b b b b b b b d d b b b b b b b 
+            c b b b b b b c c b b b b b b c 
+            c c c c c c b c c b c c c c c c 
+            b e e e e e c b b c e e e e e b 
+            b e e e e e e e e e e e e e e b 
+            b c e e e e e e e e e e e e c b 
+            b b b b b b b b b b b b b b b b 
+            . b b . . . . . . . . . . b b . 
+            `, SpriteKind.chest)
+        tiles.placeOnTile(mySprite2, value)
+        tiles.setTileAt(value, assets.tile`transparency16`)
+        mySprite3.setScale(1.5, ScaleAnchor.Middle)
+    }
+}
 function switchLevel2 () {
-    for (let value of tiles.getTilesByType(assets.tile`myTile11`)) {
+    for (let value of tiles.getTilesByType(assets.tile`myTile10`)) {
         door = sprites.create(img`
             . . . . . . . . . . . . . . . . 
             . . . . . b b b b b b . . . . . 
@@ -128,7 +154,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     }
 })
 function createKeys () {
-    for (let value of tiles.getTilesByType(assets.tile`transparency16`)) {
+    for (let value of tiles.getTilesByType(sprites.dungeon.collectibleInsignia)) {
         key = sprites.create(img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
@@ -170,16 +196,21 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.rising_platform, function (sprit
 function loadLevel () {
     destroySprites()
     if (current_level == 1) {
+        scene.setBackgroundColor(12)
         tiles.setCurrentTilemap(tilemap`level1`)
-        createDiamonds()
         createElevator()
         createLever()
     } else if (current_level == 2) {
+        scene.setBackgroundColor(11)
         info.setLife(3)
         tiles.setCurrentTilemap(tilemap`level2`)
+        createEnemies_UpDown()
+        createEnemies_LeftRight()
+        createKeys()
     }
     createPlayer()
     switchLevel2()
+    createDiamonds()
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.lever, function (sprite, otherSprite) {
     for (let index = 0; index <= leverlist.length - 1; index++) {
@@ -290,7 +321,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     lastVY = 0
 })
 function createEnemies_LeftRight () {
-    for (let value of tiles.getTilesByType(assets.tile`transparency16`)) {
+    for (let value of tiles.getTilesByType(sprites.dungeon.collectibleBlueCrystal)) {
         mySprite2 = sprites.create(img`
             . . f f f . . . . . . . . f f f 
             . f f 8 8 . . . . . . f 8 9 9 8 
@@ -311,7 +342,7 @@ function createEnemies_LeftRight () {
             `, SpriteKind.Enemy)
         tiles.placeOnTile(mySprite2, value)
         tiles.setTileAt(value, assets.tile`transparency16`)
-        mySprite2.vy = 75
+        mySprite2.vy = 100
         mySprite2.setBounceOnWall(true)
     }
 }
@@ -344,7 +375,7 @@ function createElevator () {
             b b b b b b b b b b b b b b b b 
             . . . . . . . . . . . . . . . . 
             `, SpriteKind.rising_platform)
-        tiles.placeOnTile(elevator, value)
+        tiles.placeOnTile(null, value)
         tiles.setTileAt(value, assets.tile`transparency16`)
         elevator.setVelocity(0, 50)
         elevator.setBounceOnWall(true)
@@ -356,7 +387,15 @@ function createPlayer () {
             tiles.placeOnTile(mySprite, value)
             tiles.setTileAt(value, assets.tile`transparency16`)
         }
+        controller.moveSprite(mySprite, player_speed, 0)
         mySprite.ay = gravity
+    } else if (current_level == 2) {
+        for (let value of tiles.getTilesByType(assets.tile`myTile3`)) {
+            tiles.placeOnTile(mySprite, value)
+            tiles.setTileAt(value, assets.tile`transparency16`)
+        }
+        controller.moveSprite(mySprite, 100, 100)
+        mySprite.ay = 0
     }
 }
 function destroySprites () {
@@ -377,6 +416,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
     sprites.destroy(otherSprite, effects.ashes, 300)
     info.changeLifeBy(-1)
 })
+let player_speed = 0
 let gravity = 0
 let diamonds: Sprite = null
 let elevator: Sprite = null
@@ -384,6 +424,7 @@ let key: Sprite = null
 let jump_speed = 0
 let canDoubleJump = false
 let door: Sprite = null
+let mySprite3: Sprite = null
 let holelocationlist: number[] = []
 let lever1: Sprite = null
 let leverlist: Sprite[] = []
@@ -391,16 +432,13 @@ let projectile: Sprite = null
 let mySprite2: Sprite = null
 let lastVY = 0
 let lastVX = 0
-let player_speed = 0
 let mySprite: Sprite = null
 let current_level = 0
 let ofshots = 0
-scene.setBackgroundColor(12)
 setVariable()
 ofshots = 0
 current_level = 1
 mySprite = sprites.create(assets.image`even smaller`, SpriteKind.Player)
-controller.moveSprite(mySprite, player_speed, 0)
 scene.cameraFollowSprite(mySprite)
 loadLevel()
 forever(function () {
