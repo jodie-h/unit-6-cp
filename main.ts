@@ -37,6 +37,7 @@ function createEnemies_UpDown () {
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.switchLevel, function (sprite, otherSprite) {
     current_level += 1
+    loadLevel()
 })
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if (current_level == 2 && ofshots >= 0) {
@@ -167,17 +168,18 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.rising_platform, function (sprit
     mySprite.vy = elevator.vy * 1.5
 })
 function loadLevel () {
+    destroySprites()
     if (current_level == 1) {
         tiles.setCurrentTilemap(tilemap`level1`)
+        createDiamonds()
         createElevator()
         createLever()
-        switchLevel2()
     } else if (current_level == 2) {
         info.setLife(3)
         tiles.setCurrentTilemap(tilemap`level2`)
     }
     createPlayer()
-    createDiamonds()
+    switchLevel2()
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.lever, function (sprite, otherSprite) {
     for (let index = 0; index <= leverlist.length - 1; index++) {
