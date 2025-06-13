@@ -12,7 +12,7 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     lastVY = -1
 })
 function createEnemies_UpDown () {
-    for (let value of tiles.getTilesByType(sprites.dungeon.collectibleRedCrystal)) {
+    for (let value of tiles.getTilesByType(sprites.dungeon.collectibleBlueCrystal)) {
         mySprite2 = sprites.create(img`
             . . f f f . . . . . . . . f f f 
             . f f 8 8 . . . . . . f 8 9 9 8 
@@ -340,7 +340,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     lastVY = 0
 })
 function createEnemies_LeftRight () {
-    for (let value of tiles.getTilesByType(sprites.dungeon.collectibleBlueCrystal)) {
+    for (let value of tiles.getTilesByType(sprites.dungeon.collectibleRedCrystal)) {
         mySprite2 = sprites.create(img`
             . . f f f . . . . . . . . f f f 
             . f f 8 8 . . . . . . f 8 9 9 8 
